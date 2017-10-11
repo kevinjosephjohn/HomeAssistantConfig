@@ -1,0 +1,43 @@
+binary_sensor.motion_sensor_158d0001188c87:
+ friendly_name: Bedroom Motion
+binary_sensor.motion_sensor_158d00014d2d9e:
+ friendly_name: Hall Motion
+binary_sensor.motion_sensor_158d00014dc19f:
+ friendly_name: Office Motion
+binary_sensor.motion_sensor_158d00014dc5e9:
+ friendly_name: Masterbedroom Motion
+
+
+sensor.temperature_158d000156a522:
+ friendly_name: Bedroom Temperature
+sensor.humidity_158d000156a522:
+ friendly_name: Bedroom Humidity
+binary_sensor.door_window_sensor_158d00013079a3:
+ friendly_name: Bedroom Door
+sensor.temperature_158d00012d9bb8:
+ friendly_name: Livingroom Temperature
+sensor.humidity_158d00012d9bb8:
+ friendly_name: Livingroom Humidity
+sensor.temperature_158d00012cbd72:
+ friendly_name: Office Temperature
+sensor.humidity_158d00012cbd72:
+ friendly_name: Office Humidity
+sensor.temperature_158d00012d9bc8:
+ friendly_name: Masterbedroom Temperature
+sensor.humidity_158d00012d9bc8:
+ friendly_name: Masterbedroom Humidity
+
+binary_sensor.door_window_sensor_158d000153b115:
+ friendly_name: Office
+binary_sensor.door_window_sensor_158d00014db937:
+ friendly_name: Bedroom Balcony
+binary_sensor.door_window_sensor_158d000153b0ac:
+ friendly_name: Masterbedroom
+binary_sensor.door_window_sensor_158d0001112dc9:
+ friendly_name: Kitchen
+binary_sensor.door_window_sensor_158d00014db6ab:
+ friendly_name: Kitchen
+binary_sensor.door_window_sensor_158d000149abd8:
+ friendly_name: Bathroom
+binary_sensor.door_window_sensor_158d000153afa8:
+ friendly_name: Maindoor

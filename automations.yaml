@@ -1,0 +1,17 @@
+- action:
+  - alias: acon
+    data:
+      entity_id: climate.bedroom
+    service: climate.set_temperature
+  - alias: temp
+    data:
+      temperature: '27'
+    service: climate.set_temperature
+  alias: New Automation
+  condition: []
+  id: '1505514355815'
+  trigger:
+  - event_data:
+      entity_id: binary_sensor.switch_158d00013ed1ec
+    event_type: single
+    platform: event

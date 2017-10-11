@@ -1,0 +1,566 @@
+homeassistant:
+  name: Home
+  latitude: 13.1186552
+  longitude: 80.1821839
+  elevation: 6.7
+  unit_system: metric
+  time_zone: Asia/Kolkata
+  customize: !include customize.yaml
+
+automation:
+  ########### Office Automations ###################
+
+- alias: Office AC On
+  trigger:
+    platform: event
+    event_type: click
+    event_data:
+        entity_id:  binary_sensor.switch_158d00013ed1ec
+        click_type: single
+  action:
+    service: climate.set_temperature
+    entity_id: climate.office
+    data:
+      temperature: 27
+- alias: Office AC Off
+  trigger:
+    platform: event
+    event_type: click
+    event_data:
+        entity_id:  binary_sensor.switch_158d00013ed1ec
+        click_type: double
+  action:
+    service: climate.set_temperature
+    entity_id: climate.office
+    data:
+      temperature: 33
+
+- alias: Motion Detected Office
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d00014dc19f
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
+  condition:
+    condition: state
+    entity_id: binary_sensor.door_window_sensor_158d000153b115
+    state: 'off'
+  action:
+    service: climate.set_temperature
+    entity_id: climate.office
+    data:
+      temperature: 29
+
+- alias: No Motion Detected Office
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d00014dc19f
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  condition:
+    condition: state
+    entity_id: binary_sensor.door_window_sensor_158d000153b115
+    state: 'off'
+  action:
+    service: climate.set_temperature
+    entity_id: climate.office
+    data:
+      temperature: 33
+
+- alias: Office Door Open
+  trigger:
+    platform: state
+    entity_id: binary_sensor.door_window_sensor_158d000153b115
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+  action:
+    service: climate.set_temperature
+    entity_id: climate.office
+    data:
+      temperature: 33
+########### End Office Automations ###################
+
+  ########### Hall Automations ###################
+
+- alias: TV Toggle
+  trigger:
+    platform: event
+    event_type: click
+    event_data:
+        entity_id:  binary_sensor.switch_158d00013f6c86
+        click_type: single
+  action:
+    service: switch.toggle
+    entity_id: switch.tv
+- alias: Speaker Toggle
+  trigger:
+    platform: event
+    event_type: click
+    event_data:
+        entity_id:  binary_sensor.switch_158d00013f6c86
+        click_type: double
+  action:
+    service: switch.toggle
+    entity_id: switch.speaker
+########### End Hall Automations ###################
+
+########### Bedroom Automations ###################
+- alias: Bedroom AC On
+  trigger:
+    platform: event
+    event_type: click
+    event_data:
+        entity_id:  binary_sensor.switch_158d00013ecf62
+        click_type: single
+  action:
+    service: climate.set_temperature
+    entity_id: climate.bedroom
+    data:
+      temperature: 28.5
+- alias: Bedroom AC Off
+  trigger:
+    platform: event
+    event_type: click
+    event_data:
+        entity_id:  binary_sensor.switch_158d00013ecf62
+        click_type: double
+  action:
+    service: climate.set_temperature
+    entity_id: climate.bedroom
+    data:
+      temperature: 33
+
+- alias: Bedroom TV Toggle
+  trigger:
+    platform: event
+    event_type: click
+    event_data:
+        entity_id:  binary_sensor.switch_158d00013ecf62
+        click_type: long_click_press
+  action:
+    service: switch.toggle
+    entity_id: switch.bedroom_tv
+
+
+- alias: Shield Playing
+  trigger:
+    platform: state
+    entity_id:  media_player.shield_2
+    to: 'playing'
+  condition:
+    condition: state
+    entity_id: group.bedroomdoors
+    state: 'off'
+  action:
+    service: climate.set_temperature
+    entity_id: climate.bedroom
+    data:
+      temperature: 29
+
+- alias: Shield Playing Cast
+  trigger:
+    platform: state
+    entity_id:  media_player.shield
+    to: 'playing'
+  condition:
+    condition: state
+    entity_id: group.bedroomdoors
+    state: 'off'
+  action:
+    service: climate.set_temperature
+    entity_id: climate.bedroom
+    data:
+      temperature: 29
+
+- alias: Doors Open
+  trigger:
+    platform: state
+    entity_id: group.bedroomdoors
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 15
+  action:
+    service: climate.set_temperature
+    entity_id: climate.bedroom
+    data:
+      temperature: 33
+- alias: Motion Detected bedroom
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001188c87
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
+  condition:
+    condition: state
+    entity_id: group.bedroomdoors
+    state: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
+  action:
+    service: climate.set_temperature
+    entity_id: climate.bedroom
+    data:
+      temperature: 29
+- alias: No Motion Detected bedroom
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001188c87
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+  condition:
+    condition: state
+    entity_id: group.bedroomdoors
+    state: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
+  action:
+    service: climate.set_temperature
+    entity_id: climate.bedroom
+    data:
+      temperature: 33
+
+- alias: Office Door Open
+  trigger:
+    platform: state
+    entity_id: group.bedroomdoors
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 15
+  action:
+    service: climate.set_temperature
+    entity_id: climate.bedroom
+    data:
+      temperature: 33
+- alias: Sunrise
+  trigger:
+    platform: sun
+    # Possible values: sunset, sunrise
+    event: sunrise
+  action:
+    service: climate.set_operation_mode
+    entity_id: climate.bedroom
+    data:
+      operation_mode: 'off'
+
+###########  end Bedroom Automations ###################
+
+# Show links to resources in log and frontend
+# introduction:
+
+# Enables the frontend
+frontend:
+
+# Enables configuration UI
+config:
+
+
+# upnp:
+
+http:
+  # Uncomment this to add a password (recommended!)
+  # api_password: xxxx
+  # Uncomment this if you are using SSL or running in Docker etc
+  # base_url: example.duckdns.org:8123
+  server_port: 45910
+
+# Checks for available updates
+updater:
+
+discovery:
+history:
+logbook:
+recorder:
+sun:
+
+
+# aqara:
+#    gateway_password: 30xoisruepsy1zww
+xiaomi:
+ gateways:
+   - sid: f0b429cc3c21
+     key: 30xoisruepsy1zww
+
+# device_tracker:
+#   - platform: tplink
+#     host: 192.168.1.1
+#     username: admin
+#     password: admin
+
+zone:
+  name: Home
+  latitude: 13.122402
+  longitude: 80.1882175
+  radius: 250
+  icon: mdi:account-multiple
+
+zone 2:
+  name: School
+  latitude: 13.09624
+  longitude: 80.1938443
+  icon: mdi:school
+
+# This will override the default home zone
+zone 3:
+  name: Alex
+  latitude: 13.099412
+  longitude: 80.194488
+  radius: 100
+
+# Google Home example configuration.yaml entry
+emulated_hue:
+  host_ip: 192.168.1.123
+  type: google_home
+  # Google Home does not work on different ports.
+  listen_port: 80
+
+
+# mqtt:
+#   embedded:
+#   # broker: 128.199.179.143
+#   # port: 1883
+#   # client_id: home-assistant-1
+#   # keepalive: 60
+#   # protocol: 3.1
+
+
+# Weather Prediction
+sensor:
+  - platform: yr
+    monitored_conditions:
+      - temperature
+      - humidity
+
+
+
+
+scene:
+  - name: shieldplaying
+    entities:
+      light.sleeproom: off
+      fan.sleeproom_fan: on
+      switch.bedroom_ac: on
+
+  - name: shieldidle
+    entities:
+      light.sleeproom: off
+      fan.sleeproom_fan: off
+      switch.bedroom_ac: off
+
+  - name: shieldpause
+    entities:
+      light.sleeproom: on
+      fan.sleeproom_fan: on
+      switch.bedroom_ac: off
+
+
+
+
+switch 1:
+  platform: broadlink
+  host: 192.168.1.117
+  mac: 'b4:43:0d:f9:1d:34'
+  timeout: 15
+  switches:
+    bedroomac:
+      friendly_name: "Bedroom AC"
+      command_on: 'JgDmAGc0ESMPJRIIEwgSCxEjEQgUCBMjDyUSCBIjDwwSCBMjESMSCBMjDyURCRIJEiMSCBMIFCMRCBELEggRDBIIEwgUCBIJEwgTCBQIEwgSCxEIEwkTCBANESMRCBMKEiMRCBMJEiMRIxIIEwgUCBMIEgsRCBMjEiMRIxEjDwwSCBAMEggTCBQIEwgUBxMIFAgTCBMKEggSCRMIEQwSCBELEggTCBQIEwgUBxMIFAgTCBMKEgcTCRMIEgoTCBELEggTCBQIEwgUBxMIFAgTCBMKEgcTCRMjESMRCRMjEQgTCRMiEgcUAA0FAAA='
+      command_off: 'JgDmAGQ2DyUPJRAMDwwPDBAkEAsQDA8lDyUQDA8lDwwQCxAkDyUQDA8lDyUQDA8LECUQCw8MECQQDA8MEAsQCxAMDwwQCxALEAwPDBAMDwsQDA8MDwwQDA8MEAsPDBAMDyUQDA8LECQQJBAMDwwQDA8LEQsPDBAMDyUPDBAkEAsQDA8MDw0PCxALEAwPDBALEAsQDA8MEAwPCxELDwwQDA8LEAwPDA8MEAwPDBALDwwQDA8MEAsQCxAMDwwQCxALDw0PDA8MEAsQCxAMDwwQDA8LEQsPDBAMDyUPDBALDwwQDA8lDwwQAA0FAAA='
+
+
+switch 2:
+  platform: broadlink
+  host: 192.168.1.105
+  mac: '34:ea:34:e0:bf:e3'
+  timeout: 15
+  switches:
+    workstationac:
+      friendly_name: "Workstation AC"
+      command_on: 'JgDmAGc0ESMPJRIIEwgSCxEjEQgUCBMjDyUSCBIjDwwSCBMjESMSCBMjDyURCRIJEiMSCBMIFCMRCBELEggRDBIIEwgUCBIJEwgTCBQIEwgSCxEIEwkTCBANESMRCBMKEiMRCBMJEiMRIxIIEwgUCBMIEgsRCBMjEiMRIxEjDwwSCBAMEggTCBQIEwgUBxMIFAgTCBMKEggSCRMIEQwSCBELEggTCBQIEwgUBxMIFAgTCBMKEgcTCRMIEgoTCBELEggTCBQIEwgUBxMIFAgTCBMKEgcTCRMjESMRCRMjEQgTCRMiEgcUAA0FAAA='
+      command_off: 'JgDmAGQ2DyUPJRAMDwwPDBAkEAsQDA8lDyUQDA8lDwwQCxAkDyUQDA8lDyUQDA8LECUQCw8MECQQDA8MEAsQCxAMDwwQCxALEAwPDBAMDwsQDA8MDwwQDA8MEAsPDBAMDyUQDA8LECQQJBAMDwwQDA8LEQsPDBAMDyUPDBAkEAsQDA8MDw0PCxALEAwPDBALEAsQDA8MEAwPCxELDwwQDA8LEAwPDA8MEAwPDBALDwwQDA8MEAsQCxAMDwwQCxALDw0PDA8MEAsQCxAMDwwQDA8LEQsPDBAMDyUPDBALDwwQDA8lDwwQAA0FAAA='
+
+switch 3:
+  platform: broadlink
+  host: 192.168.1.103
+  mac: '34:ea:34:e0:bf:e0'
+  timeout: 15
+  switches:
+    masterbedroomac:
+      friendly_name: "Master Bedroom AC"
+      command_on: 'JgDmAGc0ESMPJRIIEwgSCxEjEQgUCBMjDyUSCBIjDwwSCBMjESMSCBMjDyURCRIJEiMSCBMIFCMRCBELEggRDBIIEwgUCBIJEwgTCBQIEwgSCxEIEwkTCBANESMRCBMKEiMRCBMJEiMRIxIIEwgUCBMIEgsRCBMjEiMRIxEjDwwSCBAMEggTCBQIEwgUBxMIFAgTCBMKEggSCRMIEQwSCBELEggTCBQIEwgUBxMIFAgTCBMKEgcTCRMIEgoTCBELEggTCBQIEwgUBxMIFAgTCBMKEgcTCRMjESMRCRMjEQgTCRMiEgcUAA0FAAA='
+      command_off: 'JgDmAGQ2DyUPJRAMDwwPDBAkEAsQDA8lDyUQDA8lDwwQCxAkDyUQDA8lDyUQDA8LECUQCw8MECQQDA8MEAsQCxAMDwwQCxALEAwPDBAMDwsQDA8MDwwQDA8MEAsPDBAMDyUQDA8LECQQJBAMDwwQDA8LEQsPDBAMDyUPDBAkEAsQDA8MDw0PCxALEAwPDBALEAsQDA8MEAwPCxELDwwQDA8LEAwPDA8MEAwPDBALDwwQDA8MEAsQCxAMDwwQCxALDw0PDA8MEAsQCxAMDwwQDA8LEQsPDBAMDyUPDBALDwwQDA8lDwwQAA0FAAA='
+
+switch 4:
+  platform: broadlink
+  host: 192.168.1.112
+  mac: 'B4:43:0D:F9:2A:C0'
+  timeout: 15
+  switches:
+    livingroomtv:
+      friendly_name: "TV"
+      command_on: 'JgBGAJGREjUSNBI1EhASEBEREhETEhI1EjQSNRIQEhARERIQEhASNRIQEhASNRI1ERESEBA5EhASNRI0EhASERE1EjUSEBEADQUAAA=='
+      command_off: 'JgBQAAABJ5ATEBQQFDUUNRMRExAUNRQQFDUUEBM2ExAUEBQ1FDUUEBQQEzYTEBQ1FBATERMQFBAUNRQQFDUUEBM1FDUUNRQ1FQAFZQABJ0cVAA0FAAAAAAAAAAA='
+
+
+switch 5:
+  platform: broadlink
+  host: 192.168.1.112
+  mac: 'B4:43:0D:F9:2A:C0'
+  timeout: 15
+  switches:
+    speaker:
+      friendly_name: "Speaker"
+      command_on: 'JgBQAAABKJIVEBM2ExITERMSExMSEhMSEhITEhMSExETExI2ExITNhMSExITEhMSEhITEhMSEzYTNhM2EzYTNxM2EzYTNhMSEwAF3QABJ0kTAA0FAAAAAAAAAAA='
+      command_off: 'JgBQAAABKJIVEBM2ExITERMSExMSEhMSEhITEhMSExETExI2ExITNhMSExITEhMSEhITEhMSEzYTNhM2EzYTNxM2EzYTNhMSEwAF3QABJ0kTAA0FAAAAAAAAAAA='
+
+switch 6:
+  - platform: wake_on_lan
+    name: Hyperstone
+    mac_address: '60:A4:4C:5B:DE:27'
+    host: 192.168.1.100
+
+switch 7:
+  - platform: wake_on_lan
+    name: Haste
+    mac_address: '38:D5:47:13:8C:B5'
+    host: 192.168.1.101
+
+switch 8:
+  platform: broadlink
+  host: 192.168.1.117
+  mac: 'b4:43:0d:f9:1d:34'
+  timeout: 15
+  switches:
+    bedroomac:
+      friendly_name: "Bedroom TV"
+      command_on: 'JgA+AJGSEjUSOwk3ERESEREREUEFNxI0EzQRGAwPEhASEBJZDhISEBI1DjoOExASETUQXw82ERERXgo2EhAWAA0FAAAAAAAAAAAAAA=='
+      command_off: 'JgBGAJOSETYPNxA3ERAQERASERAREBA8EDYQOBAREBESDxEQEBEREA8TEBERNRA3EREREA83ETYVNg83EREPEhA3DzgPERAADQUAAA=='
+
+group:
+  default_view:
+    view: yes
+    entities:
+  #     - group.ETA
+  #     - group.TRACK
+        - group.climate
+        - group.ac
+        - group.pc
+        - group.tv
+
+  #     - group.tranmission
+      # - group.scenes
+  #     - camera.livingroom
+  #     - switch.tv
+  #     - switch.speaker
+  Climate: climate.bedroom,climate.masterbedroom,climate.office
+  Weather: sensor.yr_temperature,sensor.yr_humidity,sun.sun
+  # Transmission: sensor.transmission_status,sensor.transmission_down_speed,sensor.transmission_up_speed
+  # Track: device_tracker.john_john,device_tracker.kevin_kevin,device_tracker.sheeba_sheeba
+  # ETA: sensor.john,sensor.sheeba,sensor.kevin
+  # Scenes: input_boolean.sleepmode,scene.shieldplaying
+  Doors: binary_sensor.door_window_sensor_158d0001112dc9,binary_sensor.door_window_sensor_158d00013079a3,binary_sensor.door_window_sensor_158d000149abd8,binary_sensor.door_window_sensor_158d00014db6ab,binary_sensor.door_window_sensor_158d00014db7e3,binary_sensor.door_window_sensor_158d00014db937,binary_sensor.door_window_sensor_158d000153afa8,binary_sensor.door_window_sensor_158d000153b0ac,binary_sensor.door_window_sensor_158d000153b115,binary_sensor.door_window_sensor_158d0001596881
+  BedroomDoors: binary_sensor.door_window_sensor_158d00013079a3,binary_sensor.door_window_sensor_158d00014db937
+  LivingRoomRemote: switch.tv,switch.speaker
+  Temperature: sensor.temperature_158d000156a522,sensor.temperature_158d00012d9bc8,sensor.temperature_158d00012d9bb8,sensor.temperature_158d00012cbd72
+  Motion: binary_sensor.motion_sensor_158d0001188c87,binary_sensor.motion_sensor_158d00014d2d9e,binary_sensor.motion_sensor_158d00014dc19f,binary_sensor.motion_sensor_158d00014dc360,binary_sensor.motion_sensor_158d00014dc5e9
+  PC: switch.haste,switch.hyperstone
+
+  AC: switch.bedroom_ac,switch.workstation_ac,switch.master_bedroom_ac
+  TVs: switch.speaker,switch.tv
+
+  Sensors:
+   view: yes
+   entities:
+     - group.motion
+     - group.temperature
+     - group.doors
+
+
+climate:
+  - platform: generic_thermostat
+    name: Bedroom
+    ac_mode: 1
+    heater: switch.bedroom_ac
+    target_sensor: sensor.temperature_158d000156a522
+    min_temp: 20
+    max_temp: 35
+    target_temp: 33
+    tolerance: 0.3
+    min_cycle_duration:
+      seconds: 5
+    keep_alive:
+      minutes: 10
+
+  - platform: generic_thermostat
+    name: Office
+    ac_mode: 1
+    heater: switch.workstation_ac
+    target_sensor: sensor.temperature_158d00012cbd72
+    min_temp: 20
+    max_temp: 35
+    target_temp: 33
+    tolerance: 0.3
+    min_cycle_duration:
+      seconds: 5
+    keep_alive:
+      minutes: 10
+
+  - platform: generic_thermostat
+    name: Masterbedroom
+    ac_mode: 1
+    heater: switch.master_bedroom_ac
+    target_sensor: sensor.temperature_158d00012d9bc8
+    min_temp: 20
+    max_temp: 35
+    target_temp: 33
+    tolerance: 0.3
+    min_cycle_duration:
+      seconds: 5
+    keep_alive:
+      minutes: 10
+
+
+script:
+  acsleep:
+    alias: acsleep
+    sequence:
+      - alias: acon
+        service: homeassistant.turn_on
+        data:
+          entity_id: switch.bedroom_ac
+      - delay:
+          # time for flash light on
+          minutes: 40
+      - alias: acoff
+        service: homeassistant.turn_off
+        data:
+          entity_id: switch.bedroom_ac
+      - delay:
+          # time for flash light off
+          minutes: 20
+      - alias: loop
+        service: script.turn_on
+        data:
+          entity_id: script.acsleep
