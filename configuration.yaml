@@ -40,10 +40,6 @@ automation:
     platform: state
     entity_id: binary_sensor.motion_sensor_158d00014dc19f
     to: 'on'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 10
   condition:
     condition: state
     entity_id: binary_sensor.door_window_sensor_158d000153b115
@@ -52,7 +48,7 @@ automation:
     service: climate.set_temperature
     entity_id: climate.office
     data:
-      temperature: 29
+      temperature: 27
 
 - alias: No Motion Detected Office
   trigger:
@@ -78,10 +74,6 @@ automation:
     platform: state
     entity_id: binary_sensor.door_window_sensor_158d000153b115
     to: 'on'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 30
   action:
     service: climate.set_temperature
     entity_id: climate.office
@@ -164,7 +156,7 @@ automation:
     service: climate.set_temperature
     entity_id: climate.bedroom
     data:
-      temperature: 29
+      temperature: 28.5
 
 - alias: Shield Playing Cast
   trigger:
@@ -179,7 +171,7 @@ automation:
     service: climate.set_temperature
     entity_id: climate.bedroom
     data:
-      temperature: 29
+      temperature: 28.5
 
 - alias: Doors Open
   trigger:
@@ -200,10 +192,6 @@ automation:
     platform: state
     entity_id: binary_sensor.motion_sensor_158d0001188c87
     to: 'on'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 10
   condition:
     condition: state
     entity_id: group.bedroomdoors
@@ -216,7 +204,7 @@ automation:
     service: climate.set_temperature
     entity_id: climate.bedroom
     data:
-      temperature: 29
+      temperature: 28.5
 - alias: No Motion Detected bedroom
   trigger:
     platform: state
@@ -239,32 +227,37 @@ automation:
     entity_id: climate.bedroom
     data:
       temperature: 33
-
-- alias: Office Door Open
+- alias: Bedroom Door Open
   trigger:
     platform: state
     entity_id: group.bedroomdoors
     to: 'on'
-    for:
-      hours: 0
-      minutes: 0
-      seconds: 15
   action:
     service: climate.set_temperature
     entity_id: climate.bedroom
     data:
       temperature: 33
-- alias: Sunrise
-  trigger:
-    platform: sun
-    # Possible values: sunset, sunrise
-    event: sunrise
-  action:
-    service: climate.set_operation_mode
-    entity_id: climate.bedroom
-    data:
-      operation_mode: 'off'
 
+
+- alias: Bedroom Light On
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001188c87
+    to: 'on'
+  action:
+    service: homeassistant.turn_on
+    entity_id: switch.bedroom_light
+
+- alias: Bedroom Light Off
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001188c87
+    to: 'off'
+    for:
+      seconds: 30
+  action:
+    service: homeassistant.turn_on
+    entity_id: switch.bedroom_light
 ###########  end Bedroom Automations ###################
 
 # Show links to resources in log and frontend
@@ -298,7 +291,7 @@ sun:
 
 # aqara:
 #    gateway_password: 30xoisruepsy1zww
-xiaomi:
+xiaomi_aqara:
  gateways:
    - sid: f0b429cc3c21
      key: 30xoisruepsy1zww
@@ -337,13 +330,13 @@ emulated_hue:
   listen_port: 80
 
 
-# mqtt:
-#   embedded:
-#   # broker: 128.199.179.143
-#   # port: 1883
-#   # client_id: home-assistant-1
-#   # keepalive: 60
-#   # protocol: 3.1
+mqtt:
+  embedded:
+  broker: 128.199.179.143
+  port: 1883
+  client_id: home-assistant-1
+  keepalive: 60
+  protocol: 3.1
 
 
 # Weather Prediction
@@ -376,7 +369,123 @@ scene:
       switch.bedroom_ac: off
 
 
+# light:
+#   - platform: mqtt
+#     name: "Bedroom light"
+#     # state_topic: "stat/bedroomlight/POWER"
+#     command_topic: "cmnd/bedroomlight/POWER"
+#     payload_on: "on"
+#     payload_off: "off"
 
+switch 50:
+  - platform: mqtt
+    name: "Bedroom light"
+    state_topic: "stat/bedroomlight/POWER"
+    command_topic: "cmnd/bedroomlight/POWER"
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    retain: true
+
+switch 51:
+  - platform: mqtt
+    name: "Bedroom Fan"
+    state_topic: "stat/bedroomfan/POWER"
+    command_topic: "cmnd/bedroomfan/POWER"
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    retain: true
+
+switch 52:
+  - platform: mqtt
+    name: "Masterbedroom Fan"
+    state_topic: "stat/masterbedroomfan/POWER"
+    command_topic: "cmnd/masterbedroomfan/POWER"
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    retain: true
+
+switch 53:
+  - platform: mqtt
+    name: "Masterbedroom Light"
+    state_topic: "stat/masterbedroomlight/POWER"
+    command_topic: "cmnd/masterbedroomlight/POWER"
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    retain: true
+
+switch 54:
+  - platform: mqtt
+    name: "Livingroom Light"
+    state_topic: "stat/livingroomlight/POWER"
+    command_topic: "cmnd/livingroomlight/POWER"
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    retain: true
+
+switch 55:
+  - platform: mqtt
+    name: "Dining Light"
+    state_topic: "stat/dininglight/POWER"
+    command_topic: "cmnd/dininglight/POWER"
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    retain: true
+
+switch 56:
+  - platform: mqtt
+    name: "Livingroom Fan"
+    state_topic: "stat/livingroomfan/POWER"
+    command_topic: "cmnd/livingroomfan/POWER"
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    retain: true
+
+switch 57:
+  - platform: mqtt
+    name: "Dining Fan"
+    state_topic: "stat/diningfan/POWER"
+    command_topic: "cmnd/diningfan/POWER"
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    retain: true
+
+switch 58:
+  - platform: mqtt
+    name: "Office Fan"
+    state_topic: "stat/officefan/POWER"
+    command_topic: "cmnd/officefan/POWER"
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    retain: true
+
+switch 59:
+  - platform: mqtt
+    name: "Office Light"
+    state_topic: "stat/officelight/POWER"
+    command_topic: "cmnd/officelight/POWER"
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    retain: true
+
+switch 60:
+  - platform: mqtt
+    name: "Kitchen Light"
+    state_topic: "stat/kitchenlight/POWER"
+    command_topic: "cmnd/kitchenlight/POWER"
+    qos: 1
+    payload_on: "ON"
+    payload_off: "OFF"
+    retain: true
 
 switch 1:
   platform: broadlink
@@ -467,8 +576,12 @@ group:
         - group.climate
         - group.ac
         - group.pc
+        - group.light
         - group.tv
-
+        - alarm_control_panel.home_alarm
+        - group.bedroom
+        - group.masterbedroom
+        - group.livingroom
   #     - group.tranmission
       # - group.scenes
   #     - camera.livingroom
@@ -476,6 +589,11 @@ group:
   #     - switch.speaker
   Climate: climate.bedroom,climate.masterbedroom,climate.office
   Weather: sensor.yr_temperature,sensor.yr_humidity,sun.sun
+  Bedroom: switch.bedroom_light,switch.bedroom_fan,switch.bedroom_ac
+  Masterbedroom: switch.masterbedroom_light,switch.masterbedroom_fan,switch.masterbedroom_ac
+  LivingRoom: switch.livingroom_light,switch.dining_light,switch.livingroom_fan,switch.dining_fan
+  Office: switch.office_light,switch.office_fan
+
   # Transmission: sensor.transmission_status,sensor.transmission_down_speed,sensor.transmission_up_speed
   # Track: device_tracker.john_john,device_tracker.kevin_kevin,device_tracker.sheeba_sheeba
   # ETA: sensor.john,sensor.sheeba,sensor.kevin
@@ -541,6 +659,16 @@ climate:
     keep_alive:
       minutes: 10
 
+alarm_control_panel:
+  - platform: manual
+    name: Home Alarm
+    code: 1234
+    pending_time: 30
+    armed_home:
+      pending_time: 0
+    triggered:
+      pending_time: 20
+    trigger_time: 4
 
 script:
   acsleep:
