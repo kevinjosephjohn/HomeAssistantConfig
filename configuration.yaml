@@ -245,8 +245,9 @@ automation:
     entity_id: binary_sensor.motion_sensor_158d0001188c87
     to: 'on'
   action:
-    service: homeassistant.turn_on
+    service: homeassistant.turn_off
     entity_id: switch.bedroom_light
+
 
 - alias: Bedroom Light Off
   trigger:
@@ -258,6 +259,27 @@ automation:
   action:
     service: homeassistant.turn_on
     entity_id: switch.bedroom_light
+
+
+- alias: Bedroom Fan On
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001188c87
+    to: 'on'
+  action:
+    service: homeassistant.turn_on
+    entity_id: switch.bedroom_fan
+
+- alias: Bedroom Fan Off
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d0001188c87
+    to: 'off'
+    for:
+      minutes: 15
+  action:
+    service: homeassistant.turn_off
+    entity_id: switch.bedroom_fan
 ###########  end Bedroom Automations ###################
 
 # Show links to resources in log and frontend
@@ -582,6 +604,7 @@ group:
         - group.bedroom
         - group.masterbedroom
         - group.livingroom
+        - group.office
   #     - group.tranmission
       # - group.scenes
   #     - camera.livingroom
