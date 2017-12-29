@@ -1,0 +1,53 @@
+
+# redmi:
+#   hide_if_away: false
+#   icon:
+#   mac: BT_38:A4:ED:CB:23:60
+#   name: Redmi
+#   picture:
+#   track: true
+#   vendor: Xiaomi Communications Co Ltd
+#
+# shield:
+#   hide_if_away: false
+#   icon:
+#   mac: BT_00:04:4B:5E:18:DC
+#   name: SHIELD
+#   picture:
+#   track: true
+#   vendor: NVIDIA
+
+# super3_x5513be:
+#   hide_if_away: false
+#   icon:
+#   mac: BT_22:22:77:FA:13:BE
+#   name: super3 X55-13be
+#   picture:
+#   track: true
+#   vendor: unknown
+
+super3_x5513be:
+  name: LeTV
+  icon: mdi:television
+  mac: BT_22:22:77:FA:13:BE
+  picture: https://home-assistant.io/images/favicon-192x192.png
+  track: true
+  hide_if_away: yes
+
+redmi:
+  hide_if_away: false
+  icon:
+  mac: BT_38:A4:ED:CB:23:60
+  name: Redmi
+  picture:
+  track: true
+  vendor: unknown
+
+shield:
+  hide_if_away: false
+  icon:
+  mac: BT_00:04:4B:5E:18:DC
+  name: SHIELD
+  picture:
+  track: true
+  vendor: unknown

@@ -245,7 +245,7 @@ automation:
     entity_id: binary_sensor.motion_sensor_158d0001188c87
     to: 'on'
   action:
-    service: homeassistant.turn_off
+    service: homeassistant.turn_on
     entity_id: switch.bedroom_light
 
 
@@ -257,7 +257,7 @@ automation:
     for:
       seconds: 30
   action:
-    service: homeassistant.turn_on
+    service: homeassistant.turn_off
     entity_id: switch.bedroom_light
 
 
@@ -282,6 +282,50 @@ automation:
     entity_id: switch.bedroom_fan
 ###########  end Bedroom Automations ###################
 
+###########   Hall Automations ###################
+
+- alias: Hall Light On
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d00014d2d9e
+    to: 'on'
+  action:
+    service: homeassistant.turn_on
+    entity_id: switch.dining_light
+
+
+- alias: Hall Light Off
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d00014d2d9e
+    to: 'off'
+    for:
+      seconds: 120
+  action:
+    service: homeassistant.turn_off
+    entity_id: switch.dining_light
+
+
+- alias: Hall Fan On
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d00014d2d9e
+    to: 'on'
+  action:
+    service: homeassistant.turn_on
+    entity_id: group.livingroom_fans
+
+- alias: Hall Fan Off
+  trigger:
+    platform: state
+    entity_id: binary_sensor.motion_sensor_158d00014d2d9e
+    to: 'off'
+    for:
+      minutes: 2
+  action:
+    service: homeassistant.turn_off
+    entity_id: group.livingroom_fans
+###########  end Bedroom Automations ###################
 # Show links to resources in log and frontend
 # introduction:
 
@@ -311,18 +355,14 @@ recorder:
 sun:
 
 
-# aqara:
-#    gateway_password: 30xoisruepsy1zww
 xiaomi_aqara:
  gateways:
    - sid: f0b429cc3c21
      key: 30xoisruepsy1zww
 
-# device_tracker:
-#   - platform: tplink
-#     host: 192.168.1.1
-#     username: admin
-#     password: admin
+device_tracker:
+  - platform: bluetooth_tracker
+
 
 zone:
   name: Home
@@ -347,9 +387,12 @@ zone 3:
 # Google Home example configuration.yaml entry
 emulated_hue:
   host_ip: 192.168.1.123
-  type: google_home
+  # type: google_home
   # Google Home does not work on different ports.
-  listen_port: 80
+  # listen_port: 80
+  exposed_domains:
+    - light
+
 
 
 mqtt:
@@ -367,8 +410,6 @@ sensor:
     monitored_conditions:
       - temperature
       - humidity
-
-
 
 
 scene:
@@ -391,13 +432,6 @@ scene:
       switch.bedroom_ac: off
 
 
-# light:
-#   - platform: mqtt
-#     name: "Bedroom light"
-#     # state_topic: "stat/bedroomlight/POWER"
-#     command_topic: "cmnd/bedroomlight/POWER"
-#     payload_on: "on"
-#     payload_off: "off"
 
 switch 50:
   - platform: mqtt
@@ -551,8 +585,8 @@ switch 4:
   switches:
     livingroomtv:
       friendly_name: "TV"
-      command_on: 'JgBGAJGREjUSNBI1EhASEBEREhETEhI1EjQSNRIQEhARERIQEhASNRIQEhASNRI1ERESEBA5EhASNRI0EhASERE1EjUSEBEADQUAAA=='
-      command_off: 'JgBQAAABJ5ATEBQQFDUUNRMRExAUNRQQFDUUEBM2ExAUEBQ1FDUUEBQQEzYTEBQ1FBATERMQFBAUNRQQFDUUEBM1FDUUNRQ1FQAFZQABJ0cVAA0FAAAAAAAAAAA='
+      command_on: 'JgBQAAABJ5ATEBQQFDUUNRMRExAUNRQQFDUUEBM2ExAUEBQ1FDUUEBQQEzYTEBQ1FBATERMQFBAUNRQQFDUUEBM1FDUUNRQ1FQAFZQABJ0cVAA0FAAAAAAAAAAA='
+      command_off: 'JgBGAJGREjUSNBI1EhASEBEREhETEhI1EjQSNRIQEhARERIQEhASNRIQEhASNRI1ERESEBA5EhASNRI0EhASERE1EjUSEBEADQUAAA=='
 
 
 switch 5:
@@ -570,13 +604,22 @@ switch 6:
   - platform: wake_on_lan
     name: Hyperstone
     mac_address: '60:A4:4C:5B:DE:27'
-    host: 192.168.1.100
-
+    host: 192.168.1.201
+    turn_off:
+        service: hassio.addon_stdin
+        data:
+            addon: core_rpc_shutdown
+            input: Hyperstone
 switch 7:
   - platform: wake_on_lan
     name: Haste
     mac_address: '38:D5:47:13:8C:B5'
-    host: 192.168.1.101
+    host: 192.168.1.200
+    turn_off:
+        service: hassio.addon_stdin
+        data:
+            addon: core_rpc_shutdown
+            input: Haste
 
 switch 8:
   platform: broadlink
@@ -608,8 +651,8 @@ group:
   #     - group.tranmission
       # - group.scenes
   #     - camera.livingroom
-  #     - switch.tv
-  #     - switch.speaker
+        - switch.tv
+        - switch.speaker
   Climate: climate.bedroom,climate.masterbedroom,climate.office
   Weather: sensor.yr_temperature,sensor.yr_humidity,sun.sun
   Bedroom: switch.bedroom_light,switch.bedroom_fan,switch.bedroom_ac
@@ -622,6 +665,7 @@ group:
   # ETA: sensor.john,sensor.sheeba,sensor.kevin
   # Scenes: input_boolean.sleepmode,scene.shieldplaying
   Doors: binary_sensor.door_window_sensor_158d0001112dc9,binary_sensor.door_window_sensor_158d00013079a3,binary_sensor.door_window_sensor_158d000149abd8,binary_sensor.door_window_sensor_158d00014db6ab,binary_sensor.door_window_sensor_158d00014db7e3,binary_sensor.door_window_sensor_158d00014db937,binary_sensor.door_window_sensor_158d000153afa8,binary_sensor.door_window_sensor_158d000153b0ac,binary_sensor.door_window_sensor_158d000153b115,binary_sensor.door_window_sensor_158d0001596881
+  LivingRoom Fans: switch.livingroom_fan,switch.dining_fan
   BedroomDoors: binary_sensor.door_window_sensor_158d00013079a3,binary_sensor.door_window_sensor_158d00014db937
   LivingRoomRemote: switch.tv,switch.speaker
   Temperature: sensor.temperature_158d000156a522,sensor.temperature_158d00012d9bc8,sensor.temperature_158d00012d9bb8,sensor.temperature_158d00012cbd72
@@ -681,17 +725,6 @@ climate:
       seconds: 5
     keep_alive:
       minutes: 10
-
-alarm_control_panel:
-  - platform: manual
-    name: Home Alarm
-    code: 1234
-    pending_time: 30
-    armed_home:
-      pending_time: 0
-    triggered:
-      pending_time: 20
-    trigger_time: 4
 
 script:
   acsleep:
